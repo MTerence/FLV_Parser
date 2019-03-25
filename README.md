@@ -14,5 +14,3 @@ FLV封装格式是由一个FLV Header文件头和一个一个的Tag组成的。T
 
 ![image_text](https://github.com/MTerence/FLV_Parser/blob/master/FLV_Parser/Source/20160118103525777.jpeg)
 
-
-有关FLV的格式本文不再做记录。可以参考文章《视音频编解码学习工程：FLV封装格式分析器》。本文的程序实现了FLV中的FLV Header和Tag的解析，并可以分离出其中的音频流。
