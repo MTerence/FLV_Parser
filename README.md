@@ -1,7 +1,7 @@
 # FLV_Parser
-
 FLV数据封装
 
+# 说明
 这个Demo主要是将音频码流和视频码流打包到一起后的数据——封装格式数据的处理程序。封装格式数据在视频播放器中的位置如下所示。
 
 ![image_text](https://github.com/MTerence/FLV_Parser/blob/master/FLV_Parser/Source/20160118102143440.png)
