@@ -14,3 +14,4 @@ FLV封装格式是由一个FLV Header文件头和一个一个的Tag组成的。T
 
 ![image_text](https://github.com/MTerence/FLV_Parser/blob/master/FLV_Parser/Source/20160118103525777.jpeg)
 
+
