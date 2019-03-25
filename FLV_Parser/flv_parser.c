@@ -66,7 +66,7 @@ int simple_flv_parser(char *url){
     
     ifh = fopen(url, "rb+");
     if (ifh == NULL) {
-        printf("Failed to open files!");
+        printf("Failed to open files!\n");
         return -1;
     }
     
@@ -86,7 +86,7 @@ int simple_flv_parser(char *url){
     //process each tag
     do {
         
-        previoustagsize = _getw(ifh);
+        previoustagsize = getc(ifh);
         
         fread((void *)&tagheader, sizeof(TAG_HEADER), 1, ifh);
         
@@ -107,8 +107,192 @@ int simple_flv_parser(char *url){
         if (feof(ifh)) {
             break;
         }
-    }
+        
+        //process tag by type
+        switch (tagheader.TagType) {
+                
+            case TAG_TYPE_AUDIO:
+            {
+                char audiotag_str[100]={0};
+                strcat(audiotag_str, "| ");
+                char tagdata_first_byte;
+                tagdata_first_byte = fgetc(ifh);
+                int x = tagdata_first_byte&0xF0;
+                x=x>>4;
+                switch (x)
+                {
+                    case 0:  strcat(audiotag_str, "Liner PCM, platform endian");    break;
+                    case 1:  strcat(audiotag_str, "AUPCM");                         break;
+                    case 2:  strcat(audiotag_str, "MP3");                           break;
+                    case 3:  strcat(audiotag_str, "Liner PCM, little endian");      break;
+                    case 4:  strcat(audiotag_str, "Nellymoser 16-kHZ mono");        break;
+                    case 5:  strcat(audiotag_str, "Nellymoser 8-kHZ mono");         break;
+                    case 6:  strcat(audiotag_str, "Nellymoser");                    break;
+                    case 7:  strcat(audiotag_str, "G.711 A-law logarithmic PCM");   break;
+                    case 8:  strcat(audiotag_str, "G.711 mu-law logarithmic PCM");  break;
+                    case 9:  strcat(audiotag_str, "reserved");                      break;
+                    case 10: strcat(audiotag_str, "AAC");                           break;
+                    case 11: strcat(audiotag_str, "Speex");                         break;
+                    case 14: strcat(audiotag_str, "MP3 8-Khz");                     break;
+                    case 15: strcat(audiotag_str, "Device-specific sound");         break;
+                    default: strcat(audiotag_str, "unknow");                        break;
+                }
+                strcat(audiotag_str, "| ");
+                x = tagdata_first_byte&0x0C;
+                x=x>>2;
+                switch (x)
+                {
+                    case 0: strcat(audiotag_str, "5.5-kHz");                        break;
+                    case 1: strcat(audiotag_str, "1-kHz");                          break;
+                    case 2: strcat(audiotag_str, "22-kHz");                         break;
+                    case 3: strcat(audiotag_str, "44-kHz");                         break;
+                    default:strcat(audiotag_str, "unknow");                         break;
+                }
+                strcat(audiotag_str, "| ");
+                x = tagdata_first_byte&0x02;
+                x=x>>1;
+                switch (x)
+                {
+                    case 0:  strcat(audiotag_str, "8Bit");   break;
+                    case 1:  strcat(audiotag_str, "16Bit");  break;
+                    default: strcat(audiotag_str, "unknow"); break;
+                }
+                strcat(audiotag_str, "| ");
+                x = tagdata_first_byte&0x01;
+                switch (x)
+                {
+                    case 0:  strcat(audiotag_str, "Mono");   break;
+                    case 1:  strcat(audiotag_str, "Stereo"); break;
+                    default: strcat(audiotag_str, "unknow"); break;
+                }
+                fprintf(myout, "%s", audiotag_str);
+                
+                if (output_a!=0 && afh==NULL)
+                {
+                    afh = fopen("output.mp3", "wb");
+                }
+                
+                //TagData - First Byte Data
+                int data_size = reverse_bytes((byte *)&tagheader.DataSize, sizeof(tagheader.DataSize))-1;
+                if (output_a!=0)
+                {
+                    //TagData+1
+                    for (int i = 0; i < data_size; i++) {
+                        fputc(fgetc(ifh), afh);
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < data_size; i++) {
+                        fgetc(ifh);
+                    }
+                }
+                
+                break;
+            }
+                
+            case TAG_TYPE_VIDEO:
+            {
+                char videotag_str[100] = {0};
+                strcat(videotag_str, "| ");
+                char tagdata_first_byte;
+                tagdata_first_byte = fgetc(ifh);
+                int x = tagdata_first_byte&0xF0;
+                x=x>>4;
+                switch (x)
+                {
+                    case 1:  strcat(videotag_str, "key frame");                  break;
+                    case 2:  strcat(videotag_str, "inter frame");                break;
+                    case 3:  strcat(videotag_str, "disposable internframe");     break;
+                    case 4:  strcat(videotag_str, "generated keyframe");         break;
+                    case 5:  strcat(videotag_str, "video info/command frame");   break;
+                    default: strcat(videotag_str, "unknow");                     break;
+                }
+                strcat(videotag_str, "| ");
+                x = tagdata_first_byte&0x0F;
+                switch (x)
+                {
+                    case 1:  strcat(videotag_str, "JPEG (currently unused)");       break;
+                    case 2:  strcat(videotag_str, "Sorenson H.263");                break;
+                    case 3:  strcat(videotag_str, "Sorenson video");                break;
+                    case 4:  strcat(videotag_str, "On2 VP6");                       break;
+                    case 5:  strcat(videotag_str, "On2 VP6 with alpha channel");    break;
+                    case 6:  strcat(videotag_str, "Screen video version 2");        break;
+                    case 7:  strcat(videotag_str, "AVC");                           break;
+                    default: strcat(videotag_str, "unknow");                        break;
+                }
+                
+                fprintf(myout, "%s", videotag_str);
+                
+                fseek(ifh, -1, SEEK_CUR);
+                
+                //if the output file hasn't been opened, open it
+                if (vfh == NULL && output_v!=0)
+                {
+                    //write the flv header (reuse the original file's hdr) and first previoustagsize
+                    vfh = fopen("output.flv", "wb");
+                    fwrite((char *)&flv, 1, sizeof(flv), vfh);
+                    fwrite((char *)&previoustagsize_z, 1, sizeof(previoustagsize_z), vfh);
+                }
+                
+#if 0
+                //change timestamp
+                //Get timestamp
+                ts = reverse_bytes((byte *)&tagheader.Timestamp, sizeof(tagheader.Timestamp));
+                ts = ts*2;
+                //Writeback Timestamp
+                ts_new = reverse_bytes((byte *)&ts, sizeof(ts));
+                memcpy(&tagheader.Timestamp, ((char *)&ts_new)+1, sizeof(tagheader.Timestamp));
+                
+#endif
+                
+                //TagData + Previous Tag Size
+                int data_size = reverse_bytes((byte *)&tagheader.DataSize, sizeof(tagheader.DataSize))+4;
+                if (output_v!=0)
+                {
+                    //TagHeader
+                    fwrite((char *)&tagheader, 1, sizeof(tagheader), vfh);
+                    //TagData
+                    for (int i = 0; i < data_size; i++) {
+                        fputc(fgetc(ifh), vfh);
+                    }
+                }else{
+                    for (int i = 0; i < data_size; i ++) {
+                        fgetc(ifh);
+                    }
+                }
+                
+                
+                //rewind 4 bytes, because we need  to read the previoustagsize again for the loop's sake
+                fseek(ifh, -4, SEEK_CUR);
+                
+                break;
+            }
+                
+            default:
+                fseek(ifh, reverse_bytes((byte *)&tagheader.DataSize, sizeof(tagheader.DataSize)), SEEK_CUR);
+                fprintf(myout, "\n");
+                break;
+                
+        }
+    }while (!feof(ifh));
+    
+    fclose(ifh);
     
     
     return 0;
 }
+
+
+
+
+
+#pragma mark - strcat(dest, ...)
+/**
+ char *strcat(char *dest, const char *src)
+ 把 src 所指向的字符串追加到 dest 所指向的字符串的结尾。
+ 
+ @param dest 指向目标数组，该数组包含了一个 C 字符串，且足够容纳追加后的字符串。
+ @param ... 指向要追加的字符串，该字符串不会覆盖目标字符串
+ @return 该函数返回一个指向最终的目标字符串 dest 的指针。
+ */

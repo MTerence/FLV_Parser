@@ -11,4 +11,6 @@
 
 #include <stdio.h>
 
+int simple_flv_parser(char *url);
+
 #endif /* flv_parser_h */

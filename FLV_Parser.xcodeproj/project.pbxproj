@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		AB2EF8032248C2BE0036DAB5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = AB2EF8022248C2BE0036DAB5 /* main.m */; };
-		AB2EF80B2248C3260036DAB5 /* flv_parser.c in Sources */ = {isa = PBXBuildFile; fileRef = AB2EF80A2248C3260036DAB5 /* flv_parser.c */; };
+		AB2EF8112248E9A10036DAB5 /* flv_parser.c in Sources */ = {isa = PBXBuildFile; fileRef = AB2EF80F2248E9A00036DAB5 /* flv_parser.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -26,8 +26,9 @@
 /* Begin PBXFileReference section */
 		AB2EF7FF2248C2BE0036DAB5 /* FLV_Parser */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = FLV_Parser; sourceTree = BUILT_PRODUCTS_DIR; };
 		AB2EF8022248C2BE0036DAB5 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		AB2EF8092248C3260036DAB5 /* flv_parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = flv_parser.h; sourceTree = "<group>"; };
-		AB2EF80A2248C3260036DAB5 /* flv_parser.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = flv_parser.c; sourceTree = "<group>"; };
+		AB2EF80F2248E9A00036DAB5 /* flv_parser.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = flv_parser.c; sourceTree = "<group>"; };
+		AB2EF8102248E9A10036DAB5 /* flv_parser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = flv_parser.h; sourceTree = "<group>"; };
+		AB2EF8122248EA260036DAB5 /* cuc_ieschool.flv */ = {isa = PBXFileReference; lastKnownFileType = file; path = cuc_ieschool.flv; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,9 +61,10 @@
 		AB2EF8012248C2BE0036DAB5 /* FLV_Parser */ = {
 			isa = PBXGroup;
 			children = (
+				AB2EF8122248EA260036DAB5 /* cuc_ieschool.flv */,
 				AB2EF8022248C2BE0036DAB5 /* main.m */,
-				AB2EF8092248C3260036DAB5 /* flv_parser.h */,
-				AB2EF80A2248C3260036DAB5 /* flv_parser.c */,
+				AB2EF8102248E9A10036DAB5 /* flv_parser.h */,
+				AB2EF80F2248E9A00036DAB5 /* flv_parser.c */,
 			);
 			path = FLV_Parser;
 			sourceTree = "<group>";
@@ -123,8 +125,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AB2EF8112248E9A10036DAB5 /* flv_parser.c in Sources */,
 				AB2EF8032248C2BE0036DAB5 /* main.m in Sources */,
-				AB2EF80B2248C3260036DAB5 /* flv_parser.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -11,8 +11,7 @@
 
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
-        // insert code here...
-        NSLog(@"Hello, World!");
+        simple_flv_parser("cuc_ieschool.flv");
     }
     return 0;
 }
